@@ -2,10 +2,11 @@
 
 Timetable for {{studentId}}
 
+<a href="/timetable/{{studentId}}.ics">Download/subscribe in your calendar</a>
+
 {{#each entries}}
 	<div>
 		<h2>{{@key}}</h2>
-		{{this.date}}<br>
 		{{this.startTime}}<br>
 		{{this.endTime}}<br>
 		{{this.moduleCode}}<br>

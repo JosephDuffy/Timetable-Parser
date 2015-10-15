@@ -75,7 +75,11 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 		// Yey for semantics :)
 		for (var i = 2; i < 7; i++) {
 			let row = rows[i];
+
 			let daysOffset = i - 2;
+			let baseDate = new Date(date);
+			baseDate.setDate(baseDate.getDate() + daysOffset);
+
 			let lectures = row.getElementsByClassName('lect');
 			let practicals = row.getElementsByClassName('prac');
 
@@ -99,8 +103,17 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 								// Time
 								let timesString = textValue.split(', ')[1];
 								let timeValues = timesString.split(' - ');
-								startTime = timeValues[0];
-								endTime = timeValues[1];
+								let startTimeString = timeValues[0];
+								let endTimeString = timeValues[1];
+
+								startTime = new Date(baseDate.getTime());
+								let startTimeParts = startTimeString.split(':');
+								startTime.setHours(startTimeParts[0], startTimeParts[1]);
+
+								endTime = new Date(baseDate.getTime());
+								let endTimeParts = endTimeString.split(':');
+								endTime.setHours(endTimeParts[0], endTimeParts[1]);
+
 								break;
 							case 1:
 								// Module code
@@ -112,7 +125,7 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 								break;
 							case 3:
 								// Room
-								room = textValue.substring(0, textValue.indexOf('Room: '));
+								room = textValue.substring('Room: '.length);
 								break;
 							case 4:
 								// Lecturer
@@ -124,10 +137,7 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 						}
 					});
 
-					let entryDate = new Date(date);
-					entryDate.setDate(entryDate.getDate() + daysOffset);
-
-					let entry = new TimetableEntry(entryType, entryDate, startTime, endTime, moduleCode, moduleName, room, lecturer);
+					let entry = new TimetableEntry(entryType, startTime, endTime, moduleCode, moduleName, room, lecturer);
 					self.entries.push(entry);
 				});
 			};
@@ -183,7 +193,6 @@ Timetable.prototype.beginParsing = function() {
 					let option = availableWeeksOptions[i];
 
 					if (option.value == availableWeeksSelect.value) {
-						console.log('Found current weeks: ' + option.value);
 						let tableContainer = document.getElementById('ctl00_ContentPlaceHolder1_Schedule1');
 						if (tableContainer !== null) {
 							let table = tableContainer.firstChild;

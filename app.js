@@ -21,13 +21,12 @@ require('./routes/timetable')(app);
 
 io.on('connection', function(socket) {
 	socket.on('error', function(err) {
-		console.log(`Had an error: ${err}`);
+		console.error(`Had an error: ${err}`);
 	});
 
 	socket.on('studentId', function(studentId) {
 		function loadedTimetable(timetable) {
 			if (timetable.finished()) {
-				console.log('Asked for finished timetable');
 				socket.emit('finish', '/timetable/' + timetable.studentId);
 				return;
 			}
@@ -45,12 +44,9 @@ io.on('connection', function(socket) {
 			});
 
 			timetable.on('finish', function() {
-				console.log('timetable finished');
 				socket.emit('finish', '/timetable/' + timetable.studentId);
 			});
 		};
-
-		console.log('Asking for ' + studentId);
 
 		let timetable = cache.get(`timetable-${studentId}`);
 		if (timetable !== null) {
