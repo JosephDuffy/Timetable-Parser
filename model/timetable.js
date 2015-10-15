@@ -88,8 +88,17 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 			let lectures = row.getElementsByClassName('lect');
 			let practicals = row.getElementsByClassName('prac');
 
-			this.addMessage(`Found ${lectures.length} lectures`);
-			this.addMessage(`Found ${practicals.length} lectures`);
+			if (lectures.length == 1) {
+				this.addMessage(`Found 1 lecture in week beginning ${date}`);
+			} else {
+				this.addMessage(`Found ${lectures.length} lectures in week beginning ${date}`);
+			}
+
+			if (practicals.length == 1) {
+				this.addMessage(`Found 1 practical in week beginning ${date}`);
+			} else {
+				this.addMessage(`Found ${practicals.length} practicals in week beginning ${date}`);
+			}
 
 			function parseEntries(entries, entryType) {
 				_.forEach(entries, function(entrie) {
