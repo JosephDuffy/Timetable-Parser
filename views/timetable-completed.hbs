@@ -1,0 +1,15 @@
+{{!< default}}
+
+Timetable for {{studentId}}
+
+{{#each entries}}
+	<div>
+		<h2>{{@key}}</h2>
+		{{this.date}}<br>
+		{{this.startTime}}<br>
+		{{this.endTime}}<br>
+		{{this.moduleCode}}<br>
+		{{this.moduleName}}<br>
+		{{this.teacher}}<br>
+	</div>
+{{/each}}

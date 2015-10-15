@@ -1,0 +1,21 @@
+{
+  "name": "timetable-parser",
+  "version": "0.1.0",
+  "description": "Parse Huddersfield University timetable and export",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "express-hbs": "^0.8.4",
+    "jsdom": "^6.5.1",
+    "lodash": "^3.10.1",
+    "memory-cache": "^0.1.4",
+    "request": "^2.65.0",
+    "socket.io": "^1.3.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joseph Duffy",
+  "license": "MIT"
+}

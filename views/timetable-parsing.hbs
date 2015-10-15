@@ -1,0 +1,40 @@
+{{!< default}}
+
+Parsing timetable...
+
+<div id="timetable-messages">
+
+</div>
+
+<input type="hidden" id="timetable-id" value="{{studentId}}" />
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    var timetableId = document.getElementById('timetable-id').value;
+    var timetableMessagesDiv = document.getElementById('timetable-messages');
+
+    function connectToServer() {
+        socket.on('addMessage', function(message) {
+            var div = document.createElement('DIV');
+            div.innerHTML = message;
+            timetableMessagesDiv.appendChild(div);
+        });
+
+        socket.on('error', function(error) {
+			console.error(error);
+        });
+
+        socket.on('finish', function(url) {
+            console.log('Finished: ' + url);
+            document.location = url;
+        });
+
+        socket.on('disconnect', function() {
+            setTimeout(5000, connectToServer);
+        });
+
+        socket.emit('studentId', timetableId);
+    };
+
+    connectToServer();
+</script>

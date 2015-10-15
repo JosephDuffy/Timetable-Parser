@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en-gb" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en-gb" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en-gb" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-gb" class="no-js"> <!--<![endif]-->
+<head>
+    {{! Document Settings }}
+    <meta charset="utf-8">
+
+    {{! Page Meta }}
+    <title>{{meta_title}}</title>
+    <meta name="description" content="{{meta_description}}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{#if (isProduction)}}
+    <link rel="stylesheet" href="/css/styles.min.css">
+    {{else}}
+    <link rel="stylesheet" href="/css/styles.css">
+    {{/if}}
+
+    {{{block "headExtras"}}}
+</head>
+<body class="{{body_class}} container-fluid">
+    <header id="page-header">
+        <nav id="page-navigation-container">
+            <ul id="page-navigation">
+                <li>
+                    <a href="/">Home</a>
+                </li>
+                <li>
+                    <a href="/about/">About</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main id="page-main" class="row">
+        <div id="main-container" class="col-md-6 col-md-offset-3 col-xs-12">
+            {{! Everything else gets inserted here }}
+            {{{body}}}
+        </div>
+    </main>
+    <footer id="page-footer" class="row">
+        <div id="footer-container" class="col-md-8 col-md-offset-2 col-xs-12">
+           	<p><a href="https://github.com/JosephDuffy/Timetable-Parser">Available on GitHub</a></p>
+            <p id="footer-copyright">Copyright &copy; 2015 <a href="https://josephduffy.co.uk" title="Joseph Duffy's Website">Joseph Duffy</a></p>
+        </div>
+    </footer>
+</body>
+</html>
