@@ -26,15 +26,45 @@ module.exports = function(app) {
 
 	app.get('/timetable/:studentId.ics', function(req, res) {
 		var studentId = req.params.studentId;
+		var doAddAlarms = req.query['addAlarms'];
+		if (typeof doAddAlarms === 'undefined') {
+			doAddAlarms = true;
+		} else {
+			if (doAddAlarms === 'true') {
+				doAddAlarms = true;
+			} else if (doAddAlarms === 'false') {
+				doAddAlarms = false;
+			} else {
+				res.render('errors/400', {
+					error: 'doAddAlarms must be a boolean'
+				});
+				return;
+			}
+		}
+
+		var alarmOffset = req.query['alarmOffset'];
+		if (typeof alarmOffset === 'undefined') {
+			alarmOffset = -30;
+		} else {
+			alarmOffset = parseInt(alarmOffset, 10);
+			if (isNaN(alarmOffset)) {
+				res.render('errors/400', {
+					error: 'alarmOffset must be an integer'
+				});
+				return;
+	 		}
+ 		}
 
 		function sendTimetable(timetable) {
 			var calendarValue = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:joseph-duffy-timetable-parser`;
 
-			_.forEach(timetable.entries, function(entry) {
+			var previousEntryEndDate = null;
+			_.forEach(timetable.orderedEntries(), function(entry) {
 				calendarValue = `${calendarValue}
-${entry.iCalRepresentation()}`;
+${entry.iCalRepresentation(previousEntryEndDate, doAddAlarms, alarmOffset)}`;
+				previousEntryEndDate = entry.endTime;
 			});
 
 			calendarValue = `${calendarValue}
@@ -71,12 +101,10 @@ END:VCALENDAR`;
 		let timetable = cache.get(`timetable-${studentId}`);
 		if (timetable !== null) {
 			if (timetable.finished()) {
-				let orderedEntries = _.sortBy(timetable.entries, 'startTime');
-
 				res.render('timetable-completed', {
 					title: 'Timetable Completed',
 					studentId: studentId,
-					entries: orderedEntries
+					entries: timetable.orderedEntries()
 				});
 			} else {
 				continueRequestWithTimetable(res, timetable);
