@@ -69,7 +69,7 @@ Timetable.prototype.getDataForWeek = function(week, viewState, viewStateGenerato
 
 Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 	let self = this;
-	
+
 	this.addMessage(`Getting data for week ${date}`);
 
 	let rows = table.tBodies[0].rows;
@@ -99,8 +99,7 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 					var startTime, endTime, moduleCode, moduleName, room, lecturer;
 
 					_.forEach(containingSpan.childNodes, function(childNode) {
-						// TODO: Load this from a constant
-						if (childNode.nodeType == 3) {
+						if (childNode.nodeType == childNode.TEXT_NODE) {
 							let textValue = childNode.nodeValue.trim();
 
 							switch (textNodeIndex) {
