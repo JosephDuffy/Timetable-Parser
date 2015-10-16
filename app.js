@@ -1,5 +1,6 @@
 "use strict";
 
+require('pmx').init();
 var express = require('express');
 var app = express();
 var hbs = require('express-hbs');
