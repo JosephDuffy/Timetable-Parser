@@ -13,6 +13,7 @@ var Timetable = function(studentId) {
 	this.isParsing = false;
 	this.messages = [];
 	this.entries = [];
+	this.error = null;
 };
 
 util.inherits(Timetable, EventEmitter);
@@ -23,6 +24,17 @@ Timetable.prototype.orderedEntries = function() {
 
 Timetable.prototype.finished = function() {
 	return this.completedTimestamp !== null;
+};
+
+Timetable.prototype.finish = function(error) {
+	this.completedTimestamp = new Date();
+	this.isParsing = true;
+	if (typeof error !== 'undefined' && error !== null) {
+		this.error = error;
+		this.emit('addErrorMessage', error);
+	}
+
+	this.emit('finish');
 };
 
 Timetable.prototype.addMessage = function(message) {
@@ -203,8 +215,7 @@ Timetable.prototype.beginParsing = function() {
 					tablesParsed++;
 
 					if (tablesParsed == optionsCount) {
-						self.completedTimestamp = new Date();
-						self.emit('finish');
+						self.finish();
 					}
 				};
 
@@ -220,6 +231,11 @@ Timetable.prototype.beginParsing = function() {
 					} else {
 						self.getDataForWeek(option.value, viewState, viewStateGenerator, eventValidation, tableParsed);
 					}
+				}
+
+				if (optionsCount === 0) {
+					// Couldn't find anything
+					self.finish("Failed to find timetable data for supplied student number");
 				}
 			} else {
 				self.emit('error', 'Could not find weeks select');

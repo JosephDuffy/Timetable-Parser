@@ -1,31 +1,34 @@
 {{!< default}}
 
-<h2>Timetable for {{studentId}}</h2>
-
-<p>
-	<a href="{{timetableURL}}" id="download-calendar-anchor">Download your calendar</a> or, subscribe using your calendar app with the following URL (<a href="/faq#subscribe-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).
+<h3>Calendar Export</h3>
+<div>
+	<a href="webcal://{{timetableURL}}" id="subscribe-calendar-anchor">Subscribe automatically to your calendar</a> or <a href="{{urlProtocol}}://{{timetableURL}}" id="download-calendar-anchor">subscribe manually</a> using your calendar app with the following URL (<a href="/faq#how-to-add-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).
 	<div id="calendar-url-display-wrapper" class="copy-text-wrapper">
-		<pre id="download-calendar-url-display">{{timetableURL}}</pre>
+		<pre id="download-calendar-url-display">{{urlProtocol}}://{{timetableURL}}</pre>
 	</div>
-</p>
+</div>
 <form id="timetable-options-form" class="form-horizontal">
-	<input type="hidden" value="{{baseTimetableURL}}" id="base-calendar-url" name="baseCalendarURL" />
+	<input type="hidden" value="{{baseTimetableURL}}" id="base-calendar-url" />
 
 	<fieldset>
 		<legend>Timetable Options</legend>
-		<div class="form-group">
-			<div class="checkbox">
-				<label>
-					<input type="checkbox" name="addAlarms" id="add-alarms-input" {{#if addAlarms}}checked{{/if}}> Add Alarms
-				</label>
+		<div class="col-sm-6">
+			<div class="form-group col-sm-12">
+				<div class="checkbox">
+					{{! This is a hack to ensure that on submit a value for "addAlarms" is always sent. This wouldn't be needed if the default was false. }}
+					<input type="hidden" name="addAlarms" value="false">
+					<label>
+						<input type="checkbox" name="addAlarms" id="add-alarms-input" value="true" data-default="{{addAlarmsDefault}}" {{#if addAlarms}}checked{{/if}}> Add Alarms
+					</label>
+				</div>
 			</div>
-		</div>
 
-		<div class="form-group">
-			<div class="input-group">
-				<label for="alarmOffset">Alarm Offset</label>
-				<input type="number" class="form-control" name="alarmOffset" id="alarm-offset-input" value="{{alarmOffset}}">
-				<div class="input-group-addon">Minutes</div>
+			<div class="form-group">
+				<label for="alarmOffset" class="col-sm-4 control-label">Alarm Offset</label>
+				<div class="input-group col-sm-8">
+					<input type="number" class="form-control" name="alarmOffset" id="alarm-offset-input" value="{{alarmOffset}}" data-default="{{alarmOffsetDefault}}" {{#unless addAlarms}}disabled{{/unless}}>
+					<div class="input-group-addon">Minutes</div>
+				</div>
 			</div>
 		</div>
 	</fieldset>
@@ -39,10 +42,11 @@
 	var alarmOffsetInput = document.getElementById('alarm-offset-input');
 	var baseCalendarURL = document.getElementById('base-calendar-url').value;
 	var downloadCalendarAnchor = document.getElementById('download-calendar-anchor');
+	var subscribeCalendarAnchor = document.getElementById('subscribe-calendar-anchor');
 	var calendarURLDisplayWrapper = document.getElementById('calendar-url-display-wrapper');
 	var downloadCalendarURLDisplay = document.getElementById('download-calendar-url-display');
 
-	document.getElementById('update-timetable-url-button').style = "display: none;";
+	document.getElementById('update-timetable-url-button').className = "hidden";
 
 	timetableOptionsForm.onsubmit = function() {
 		updateDownloadURL();
@@ -93,8 +97,6 @@
 		};
 
 		calendarURLDisplayWrapper.appendChild(copyCalendarURLWrapper);
-	} else {
-		console.log("Doesn't support copying");
 	}
 
 	function updateDownloadURL() {
@@ -116,22 +118,42 @@
 				queryString += "?"
 			}
 			queryString += "alarmOffset="  + alarmOffset;
+			hasAddedParam = true;
 		}
 		var newCalendarURL = baseCalendarURL + queryString;
-		downloadCalendarAnchor.href= newCalendarURL;
-		downloadCalendarURLDisplay.innerHTML = newCalendarURL;
+		downloadCalendarAnchor.href = document.location.protocol + "//" + newCalendarURL;
+		subscribeCalendarAnchor.href = "webcal://" + newCalendarURL;
+		downloadCalendarURLDisplay.innerHTML = document.location.protocol + "//" + newCalendarURL;
 
 		window.history.replaceState( {} , '{{title}}', document.location.pathname + queryString);
+
+		alarmOffsetInput.disabled = !addAlarm;
 	};
 </script>
 
-{{#each entries}}
-	<div>
-		<h2>{{@key}}</h2>
-		{{this.startTime}}<br>
-		{{this.endTime}}<br>
-		{{this.moduleCode}}<br>
-		{{this.moduleName}}<br>
-		{{this.teacher}}<br>
-	</div>
-{{/each}}
+<h3>All Events</h3>
+
+<div class="table-responsive">
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th>Start Date</th>
+				<th>End Date</th>
+				<th>Room</th>
+				<th>Module</th>
+				<th>Lecturer(s)</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each entries}}
+			<tr>
+				<td>{{this.startTime}}</td>
+				<td>{{this.endTime}}</td>
+				<td>{{this.room}}</td>
+				<td>{{this.moduleName}} ({{this.moduleCode}})</td>
+				<td>{{this.teacher}}</td>
+			</tr>
+			{{/each}}
+		</tbody>
+  </table>
+</div>

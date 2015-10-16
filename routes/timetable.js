@@ -19,7 +19,7 @@ module.exports = function(app) {
 
 	function continueRequestWithTimetable(res, timetable) {
 		res.render('timetable-parsing', {
-			title: 'Parsing timetable',
+			title: 'Parsing timetable...',
 			'studentId': timetable.studentId
 		});
 	};
@@ -56,22 +56,26 @@ module.exports = function(app) {
  		}
 
 		function sendTimetable(timetable) {
-			var calendarValue = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:joseph-duffy-timetable-parser`;
+			if (timetable.error !== null) {
+				var calendarValue = `BEGIN:VCALENDAR
+	VERSION:2.0
+	PRODID:joseph-duffy-timetable-parser`;
 
-			var previousEntryEndDate = null;
-			_.forEach(timetable.orderedEntries(), function(entry) {
+				var previousEntryEndDate = null;
+				_.forEach(timetable.orderedEntries(), function(entry) {
+					calendarValue = `${calendarValue}
+	${entry.iCalRepresentation(previousEntryEndDate, doAddAlarms, alarmOffset)}`;
+					previousEntryEndDate = entry.endTime;
+				});
+
 				calendarValue = `${calendarValue}
-${entry.iCalRepresentation(previousEntryEndDate, doAddAlarms, alarmOffset)}`;
-				previousEntryEndDate = entry.endTime;
-			});
+	END:VCALENDAR`;
 
-			calendarValue = `${calendarValue}
-END:VCALENDAR`;
-
-			res.header('Content-Type', 'text/calendar;charset=UTF-8');
-			res.send(calendarValue.replace(/\n/g, "\r\n"));
+				res.header('Content-Type', 'text/calendar;charset=UTF-8');
+				res.send(calendarValue.replace(/\n/g, "\r\n"));
+			} else {
+				res.send('errors/404');
+			}
 		}
 
 		let timetable = cache.get(`timetable-${studentId}`);
@@ -132,15 +136,23 @@ END:VCALENDAR`;
 
 		let timetable = cache.get(`timetable-${studentId}`);
 		if (timetable !== null) {
-			if (timetable.finished()) {
+			if (timetable.error) {
+				res.render('timetable-error', {
+					title: 'Timetable Error',
+					errorMessage: timetable.error
+				});
+			} else if (timetable.finished()) {
 				res.render('timetable-completed', {
-					title: 'Timetable Completed',
-					baseTimetableURL: `${req.protocol}://${req.get('host')}/timetable/${studentId}.ics`,
-					timetableURL: `${req.protocol}://${req.get('host')}/timetable/${studentId}.ics${queryString}`,
+					title: `Timetable for ${studentId}`,
+					baseTimetableURL: `${req.get('host')}/timetable/${studentId}.ics`,
+					timetableURL: `${req.get('host')}/timetable/${studentId}.ics${queryString}`,
 					entries: timetable.orderedEntries(),
 					addAlarms: addAlarms,
 					alarmOffset: alarmOffset,
-					studentId: studentId
+					studentId: studentId,
+					addAlarmsDefault: addAlarmsDefault,
+					alarmOffsetDefault: alarmOffsetDefault,
+					urlProtocol: req.protocol
 				});
 			} else {
 				continueRequestWithTimetable(res, timetable);
