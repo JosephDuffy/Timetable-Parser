@@ -95,7 +95,7 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 
 			let daysOffset = i - 2;
 			let baseDate = new Date(date);
-			baseDate.setDate(baseDate.getDate() + daysOffset);
+			baseDate.setDate(baseDate.getUTCDate() + daysOffset);
 
 			let lectures = row.getElementsByClassName('lect');
 			let practicals = row.getElementsByClassName('prac');

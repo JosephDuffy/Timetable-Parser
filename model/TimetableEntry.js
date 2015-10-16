@@ -26,6 +26,14 @@ TimetableEntry.prototype.calendarId = function() {
 	return `${this.startTime.getTime()}.${this.studentId}@timetable-parser.josephduffy.co.uk`
 };
 
+TimetableEntry.prototype.formattedStartDate = function() {
+	return dateFormat(this.startTime, "HH:MM dd/mm/yyyy");
+};
+
+TimetableEntry.prototype.formattedEndDate = function() {
+	return dateFormat(this.endTime, "HH:MM dd/mm/yyyy");
+};
+
 TimetableEntry.prototype.iCalRepresentation = function(previousEntryEndDate, doAddAlarms, alarmOffset) {
 	let dateFormatString = "yyyymmdd'T'HHMMss";
 	var entryTypeName;

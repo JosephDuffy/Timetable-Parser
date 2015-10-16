@@ -71,7 +71,7 @@ io.on('connection', function(socket) {
 	});
 });
 
-var server = app.listen(3000, function () {
+var server = app.listen(5450, function () {
 	io.attach(server);
 
 	var host = server.address().address;
