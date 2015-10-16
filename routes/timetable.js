@@ -98,13 +98,48 @@ END:VCALENDAR`;
 	app.get('/timetable/:studentId', function(req, res) {
 		var studentId = req.params.studentId;
 
+		var queryString = "";
+
+		var addAlarms = req.query['addAlarms'];
+		if (typeof addAlarms === 'undefined') {
+			addAlarms = true;
+		} else {
+			if (addAlarms === 'false') {
+				addAlarms = false;
+			} else {
+				addAlarms = true;
+			}
+			queryString += `?addAlarms=${addAlarms}`
+		}
+
+		var alarmOffset = req.query['alarmOffset'];
+		if (typeof alarmOffset === 'undefined') {
+			alarmOffset = -30;
+		} else {
+			alarmOffset = parseInt(alarmOffset, 10);
+			if (isNaN(alarmOffset)) {
+				alarmOffset = -30;
+	 		}
+
+			 if (queryString.length == 0) {
+				 queryString += "?";
+			 } else {
+				 queryString += "&";
+			 }
+
+			 queryString += `alarmOffset=${alarmOffset}`;
+ 		}
+
 		let timetable = cache.get(`timetable-${studentId}`);
 		if (timetable !== null) {
 			if (timetable.finished()) {
 				res.render('timetable-completed', {
 					title: 'Timetable Completed',
-					studentId: studentId,
-					entries: timetable.orderedEntries()
+					baseTimetableURL: `${req.protocol}://${req.get('host')}/timetable/${studentId}.ics`,
+					timetableURL: `${req.protocol}://${req.get('host')}/timetable/${studentId}.ics${queryString}`,
+					entries: timetable.orderedEntries(),
+					addAlarms: addAlarms,
+					alarmOffset: alarmOffset
 				});
 			} else {
 				continueRequestWithTimetable(res, timetable);

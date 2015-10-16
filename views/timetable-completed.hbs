@@ -1,8 +1,69 @@
 {{!< default}}
 
-Timetable for {{studentId}}
+<h2>Timetable for {{studentId}}</h2>
 
-<a href="/timetable/{{studentId}}.ics">Download/subscribe in your calendar</a>
+<p>
+	<a href="{{timetableURL}}" id="download-calendar-anchor">Download your calendar</a> or, subscribe using your calendar app with the following URL (<a href="/faq#subscribe-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).
+	<pre id="download-calendar-url-display">{{timetableURL}}</pre>
+</p>
+<form id="timetable-options-form">
+	<input type="hidden" value="{{baseTimetableURL}}" id="base-calendar-url" name="baseCalendarURL" />
+
+	<label for="addAlarms">Add Alarms</label>
+	<input type="checkbox" name="addAlarms" id="add-alarms-input" {{#if addAlarms}}checked{{/if}}>
+
+	<label for="alarmOffset">Alarm Offset</label>
+	<input type="number" name="alarmOffset" id="alarm-offset-input" value="{{alarmOffset}}">
+
+	<input type="submit" value="Update URL" id="update-timetable-url-button">
+</form>
+
+<script>
+	var timetableOptionsForm = document.getElementById('timetable-options-form');
+	var addAlarmInput = document.getElementById('add-alarms-input');
+	var alarmOffsetInput = document.getElementById('alarm-offset-input');
+	var baseCalendarURL = document.getElementById('base-calendar-url').value;
+	var downloadCalendarAnchor = document.getElementById('download-calendar-anchor');
+	var downloadCalendarURLDisplay = document.getElementById('download-calendar-url-display');
+
+	document.getElementById('update-timetable-url-button').style = "display: none;";
+
+	timetableOptionsForm.onsubmit = function() {
+		updateDownloadURL();
+
+		return false;
+	};
+
+	addAlarmInput.onchange = updateDownloadURL;
+	alarmOffsetInput.onchange = updateDownloadURL;
+
+	function updateDownloadURL() {
+		var addAlarm = addAlarmInput.checked;
+		var alarmOffset = alarmOffsetInput.value;
+		var queryString = "";
+
+		var hasAddedParam = false;
+
+		if (addAlarm !== true) {
+			queryString += "?addAlarms=" + addAlarm;
+			hasAddedParam = true;
+		}
+
+		if (alarmOffset != -30) {
+			if (hasAddedParam) {
+				queryString += "&"
+			} else {
+				queryString += "?"
+			}
+			queryString += "alarmOffset="  + alarmOffset;
+		}
+		var newCalendarURL = baseCalendarURL + queryString;
+		downloadCalendarAnchor.href= newCalendarURL;
+		downloadCalendarURLDisplay.innerText = newCalendarURL;
+
+		window.history.replaceState( {} , '{{title}}', document.location.pathname + queryString);
+	};
+</script>
 
 {{#each entries}}
 	<div>
