@@ -2,7 +2,13 @@
 
 <h3>Calendar Export</h3>
 <div>
-	<a href="webcal://{{timetableURL}}" id="subscribe-calendar-anchor">Subscribe automatically to your calendar</a> or <a href="{{urlProtocol}}://{{timetableURL}}" id="download-calendar-anchor">subscribe manually</a> using your calendar app with the following URL (<a href="/faq#how-to-add-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).
+	<p>
+		Below you can add your timetable to your calendar (subscribe) or manually download the calendar events in the form of an .ics file.
+	</p>
+	<a href="webcal://{{timetableURL}}" id="subscribe-calendar-anchor" class="btn btn-default">Add to calendar</a><br>
+	<a href="{{urlProtocol}}://{{timetableURL}}" id="download-calendar-anchor" class="btn btn-default">Download .ics file</a>
+
+	<p>You can also use the URL below to manually subscribe in your calendar app (<a href="/faq#how-to-add-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).</p>
 	<div id="calendar-url-display-wrapper" class="copy-text-wrapper">
 		<pre id="download-calendar-url-display">{{urlProtocol}}://{{timetableURL}}</pre>
 	</div>
