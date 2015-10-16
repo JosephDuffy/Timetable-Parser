@@ -102,11 +102,14 @@ module.exports = function(app) {
 	app.get('/timetable/:studentId', function(req, res) {
 		var studentId = req.params.studentId;
 
+		let addAlarmsDefault = true;
+		let alarmOffsetDefault = -30;
+
 		var queryString = "";
 
 		var addAlarms = req.query['addAlarms'];
 		if (typeof addAlarms === 'undefined') {
-			addAlarms = true;
+			addAlarms = addAlarmsDefault;
 		} else {
 			if (addAlarms === 'false') {
 				addAlarms = false;
@@ -118,11 +121,11 @@ module.exports = function(app) {
 
 		var alarmOffset = req.query['alarmOffset'];
 		if (typeof alarmOffset === 'undefined') {
-			alarmOffset = -30;
+			alarmOffset = alarmOffsetDefault;
 		} else {
 			alarmOffset = parseInt(alarmOffset, 10);
 			if (isNaN(alarmOffset)) {
-				alarmOffset = -30;
+				alarmOffset = alarmOffsetDefault;
 	 		}
 
 			 if (queryString.length == 0) {

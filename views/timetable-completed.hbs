@@ -45,6 +45,8 @@
 	var subscribeCalendarAnchor = document.getElementById('subscribe-calendar-anchor');
 	var calendarURLDisplayWrapper = document.getElementById('calendar-url-display-wrapper');
 	var downloadCalendarURLDisplay = document.getElementById('download-calendar-url-display');
+	var addAlarmsDefault = Boolean(addAlarmInput.dataset["default"]);
+	var alarmOffsetDefault = parseInt(alarmOffsetInput.dataset["default"]);
 
 	document.getElementById('update-timetable-url-button').className = "hidden";
 
@@ -101,17 +103,17 @@
 
 	function updateDownloadURL() {
 		var addAlarm = addAlarmInput.checked;
-		var alarmOffset = alarmOffsetInput.value;
+		var alarmOffset = parseInt(alarmOffsetInput.value);
 		var queryString = "";
 
 		var hasAddedParam = false;
 
-		if (addAlarm !== true) {
+		if (addAlarm !== addAlarmsDefault) {
 			queryString += "?addAlarms=" + addAlarm;
 			hasAddedParam = true;
 		}
 
-		if (alarmOffset != -30) {
+		if (alarmOffset !== alarmOffsetDefault && addAlarm) {
 			if (hasAddedParam) {
 				queryString += "&"
 			} else {
