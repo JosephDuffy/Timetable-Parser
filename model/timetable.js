@@ -142,7 +142,7 @@ Timetable.prototype.parseTimetableHTML = function(table, date, callback) {
 								break;
 							case 1:
 								// Module code
-								moduleCode = textValue;
+								moduleCode = textValue.substring('Module: '.length);
 								break;
 							case 2:
 								// Module name
