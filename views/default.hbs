@@ -8,7 +8,7 @@
     <meta charset="utf-8">
 
     {{! Page Meta }}
-    <title>{{meta_title}}</title>
+    <title>{{title}}</title>
     <meta name="description" content="{{meta_description}}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,30 +22,31 @@
     {{{block "headExtras"}}}
 </head>
 <body class="{{body_class}} container-fluid">
-    <header id="page-header">
-        <nav id="page-navigation-container">
-            <ul id="page-navigation">
+    <header id="page-header" class="container-fullwidth">
+        <nav id="page-navigation-container" class="navbar navbar-default">
+            <ul id="page-navigation" class="nav navbar-nav">
                 <li>
                     <a href="/">Home</a>
                 </li>
                 <li>
-                    <a href="/about/">About</a>
+                    <a href="/about">About</a>
                 </li>
                 <li>
-                    <a href="/faq/">FAQ</a>
+                    <a href="/faq">FAQ</a>
                 </li>
             </ul>
         </nav>
     </header>
     <main id="page-main" class="row">
         <div id="main-container" class="col-md-6 col-md-offset-3 col-xs-12">
+            <h2>{{title}}</h2>
             {{! Everything else gets inserted here }}
             {{{body}}}
         </div>
     </main>
     <footer id="page-footer" class="row">
         <div id="footer-container" class="col-md-8 col-md-offset-2 col-xs-12">
-           	<p><a href="https://github.com/JosephDuffy/Timetable-Parser">Available on GitHub</a></p>
+           	<p>Timetable Parser is an open-source project <a href="https://github.com/JosephDuffy/Timetable-Parser">available on GitHub</a></p>
             <p id="footer-copyright">Copyright &copy; 2015 <a href="https://josephduffy.co.uk" title="Joseph Duffy's Website">Joseph Duffy</a></p>
         </div>
     </footer>

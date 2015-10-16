@@ -23,13 +23,21 @@ app.get('/', function(req, res) {
 	});
 });
 
+app.get('/about', function(req, res) {
+	res.render('about', {
+		title: 'About - University of Huddersfield Timetable Parser'
+	});
+});
+
+app.get('/faq', function(req, res) {
+	res.render('faq', {
+		title: 'Frequently Asked Questions - University of Huddersfield Timetable Parser'
+	});
+});
+
 require('./routes/timetable')(app);
 
 io.on('connection', function(socket) {
-	socket.on('error', function(err) {
-		console.error(`Had an error: ${err}`);
-	});
-
 	socket.on('studentId', function(studentId) {
 		function loadedTimetable(timetable) {
 			if (timetable.finished()) {
@@ -37,8 +45,8 @@ io.on('connection', function(socket) {
 				return;
 			}
 
-			timetable.on('error', function(err) {
-				socket.emit('error', err);
+			timetable.on('addErrorMessage', function(err) {
+				socket.emit('addErrorMessage', err);
 			});
 
 			timetable.messages.forEach(function(message) {
