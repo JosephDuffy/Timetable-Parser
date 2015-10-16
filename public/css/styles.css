@@ -3043,7 +3043,8 @@ input[type="button"].btn-block {
   display: none; }
 
 #timetable-options-form .control-label {
-  text-align: left; }
+  text-align: left;
+  padding-left: 0; }
 
 /* Sticky footer */
 html {

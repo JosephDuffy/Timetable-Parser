@@ -117,7 +117,10 @@ END:VCALENDAR`;
 			} else {
 				addAlarms = true;
 			}
-			queryString += `?addAlarms=${addAlarms}`
+
+			if (addAlarms !== addAlarmsDefault) {
+				queryString += `?addAlarms=${addAlarms}`
+			}
 		}
 
 		var alarmOffset = req.query['alarmOffset'];
@@ -129,13 +132,15 @@ END:VCALENDAR`;
 				alarmOffset = alarmOffsetDefault;
 	 		}
 
-			 if (queryString.length == 0) {
-				 queryString += "?";
-			 } else {
-				 queryString += "&";
-			 }
+			 if (addAlarms && alarmOffset !== alarmOffsetDefault) {
+				if (queryString.length == 0) {
+					queryString += "?";
+				} else {
+					queryString += "&";
+				}
 
-			 queryString += `alarmOffset=${alarmOffset}`;
+				queryString += `alarmOffset=${alarmOffset}`;
+			 }
  		}
 
 		let timetable = cache.get(`timetable-${studentId}`);
