@@ -8,6 +8,10 @@ var hbs = require('express-hbs');
 var io = require('socket.io')();
 var cache = require('memory-cache');
 
+hbs.registerHelper('isProduction', function() {
+    return process.env.NODE_ENV === 'production';
+});
+
 app.set('io', io);
 app.engine('hbs', hbs.express4());
 app.set('view engine', 'hbs');
