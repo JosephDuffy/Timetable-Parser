@@ -56,25 +56,26 @@ module.exports = function(app) {
  		}
 
 		function sendTimetable(timetable) {
-			if (timetable.error !== null) {
+			if (timetable.error === null) {
 				var calendarValue = `BEGIN:VCALENDAR
-	VERSION:2.0
-	PRODID:joseph-duffy-timetable-parser`;
+VERSION:2.0
+PRODID:joseph-duffy-timetable-parser`;
 
 				var previousEntryEndDate = null;
 				_.forEach(timetable.orderedEntries(), function(entry) {
 					calendarValue = `${calendarValue}
-	${entry.iCalRepresentation(previousEntryEndDate, doAddAlarms, alarmOffset)}`;
+${entry.iCalRepresentation(previousEntryEndDate, doAddAlarms, alarmOffset)}`;
 					previousEntryEndDate = entry.endTime;
 				});
 
 				calendarValue = `${calendarValue}
-	END:VCALENDAR`;
+END:VCALENDAR`;
 
 				res.header('Content-Type', 'text/calendar;charset=UTF-8');
 				res.send(calendarValue.replace(/\n/g, "\r\n"));
 			} else {
-				res.send('errors/404');
+				res.status(404);
+				res.render('errors/404');
 			}
 		}
 
