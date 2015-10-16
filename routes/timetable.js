@@ -139,7 +139,8 @@ END:VCALENDAR`;
 					timetableURL: `${req.protocol}://${req.get('host')}/timetable/${studentId}.ics${queryString}`,
 					entries: timetable.orderedEntries(),
 					addAlarms: addAlarms,
-					alarmOffset: alarmOffset
+					alarmOffset: alarmOffset,
+					studentId: studentId
 				});
 			} else {
 				continueRequestWithTimetable(res, timetable);

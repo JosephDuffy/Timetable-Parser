@@ -4,18 +4,33 @@
 
 <p>
 	<a href="{{timetableURL}}" id="download-calendar-anchor">Download your calendar</a> or, subscribe using your calendar app with the following URL (<a href="/faq#subscribe-to-calendar" title="How to subscribe to your calendar in your own calendar application">how?</a>).
-	<pre id="download-calendar-url-display">{{timetableURL}}</pre>
+	<div id="calendar-url-display-wrapper" class="copy-text-wrapper">
+		<pre id="download-calendar-url-display">{{timetableURL}}</pre>
+	</div>
 </p>
-<form id="timetable-options-form">
+<form id="timetable-options-form" class="form-horizontal">
 	<input type="hidden" value="{{baseTimetableURL}}" id="base-calendar-url" name="baseCalendarURL" />
 
-	<label for="addAlarms">Add Alarms</label>
-	<input type="checkbox" name="addAlarms" id="add-alarms-input" {{#if addAlarms}}checked{{/if}}>
+	<fieldset>
+		<legend>Timetable Options</legend>
+		<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="addAlarms" id="add-alarms-input" {{#if addAlarms}}checked{{/if}}> Add Alarms
+				</label>
+			</div>
+		</div>
 
-	<label for="alarmOffset">Alarm Offset</label>
-	<input type="number" name="alarmOffset" id="alarm-offset-input" value="{{alarmOffset}}">
+		<div class="form-group">
+			<div class="input-group">
+				<label for="alarmOffset">Alarm Offset</label>
+				<input type="number" class="form-control" name="alarmOffset" id="alarm-offset-input" value="{{alarmOffset}}">
+				<div class="input-group-addon">Minutes</div>
+			</div>
+		</div>
+	</fieldset>
 
-	<input type="submit" value="Update URL" id="update-timetable-url-button">
+	<button type="submit" class="btn btn-primary" id="update-timetable-url-button">Update URL</button>
 </form>
 
 <script>
@@ -24,6 +39,7 @@
 	var alarmOffsetInput = document.getElementById('alarm-offset-input');
 	var baseCalendarURL = document.getElementById('base-calendar-url').value;
 	var downloadCalendarAnchor = document.getElementById('download-calendar-anchor');
+	var calendarURLDisplayWrapper = document.getElementById('calendar-url-display-wrapper');
 	var downloadCalendarURLDisplay = document.getElementById('download-calendar-url-display');
 
 	document.getElementById('update-timetable-url-button').style = "display: none;";
@@ -36,6 +52,50 @@
 
 	addAlarmInput.onchange = updateDownloadURL;
 	alarmOffsetInput.onchange = updateDownloadURL;
+
+	downloadCalendarURLDisplay.onclick = function() {
+		if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(this);
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(this);
+            window.getSelection().addRange(range);
+        }
+	};
+
+	if (document.queryCommandSupported('copy')) {
+		var copyCalendarURLWrapper = document.createElement("DIV");
+		copyCalendarURLWrapper.className = "copy-anchor-wrapper";
+		var copyAnchor = document.createElement("A");
+		copyAnchor.innerHTML = "Copy";
+		copyAnchor.title = "Copy timetable calendar URL";
+		copyCalendarURLWrapper.appendChild(copyAnchor);
+
+		copyAnchor.onclick = function() {
+			var anchor = this;
+			var copiedSpan = document.createElement("SPAN");
+			copiedSpan.innerHTML = "Copied!";
+			copiedSpan.className = 'copy-anchor';
+
+			// Highlight the text and then perform a copy command
+			downloadCalendarURLDisplay.onclick();
+			document.execCommand('copy');
+
+			copyCalendarURLWrapper.removeChild(anchor);
+			copyCalendarURLWrapper.appendChild(copiedSpan);
+
+			setTimeout(function() {
+				copyCalendarURLWrapper.removeChild(copiedSpan);
+				copyCalendarURLWrapper.appendChild(anchor);
+			}, 1500);
+		};
+
+		calendarURLDisplayWrapper.appendChild(copyCalendarURLWrapper);
+	} else {
+		console.log("Doesn't support copying");
+	}
 
 	function updateDownloadURL() {
 		var addAlarm = addAlarmInput.checked;
@@ -59,7 +119,7 @@
 		}
 		var newCalendarURL = baseCalendarURL + queryString;
 		downloadCalendarAnchor.href= newCalendarURL;
-		downloadCalendarURLDisplay.innerText = newCalendarURL;
+		downloadCalendarURLDisplay.innerHTML = newCalendarURL;
 
 		window.history.replaceState( {} , '{{title}}', document.location.pathname + queryString);
 	};

@@ -3,6 +3,7 @@
 require('pmx').init();
 var express = require('express');
 var app = express();
+var compression = require('compression');
 var hbs = require('express-hbs');
 var io = require('socket.io')();
 var cache = require('memory-cache');
@@ -11,6 +12,10 @@ app.set('io', io);
 app.engine('hbs', hbs.express4());
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+app.use(compression());
+app.use(express.static(__dirname + '/public', {
+    maxAge: 60*60*24*30 * 1000 // 30 days caching (the value is being divided by 1000?)
+}));
 
 app.get('/', function(req, res) {
 	res.render('index', {

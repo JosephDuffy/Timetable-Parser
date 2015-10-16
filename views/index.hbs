@@ -1,6 +1,11 @@
 {{!< default}}
 
 <form action="/timetable">
-	<label>Student Number: <input type="text" name="studentId"></label>
-	<input type="submit" value="Load timetable"</input>
+	<div class="form-group">
+		<label for="studentId">Student Number</label>
+		<input type="text" class="form-control" name="studentId" required>
+		<span class="help-block">Input your full student number, without the the "u". e.g., "1259589"</span>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Load timetable</button>
 </form>

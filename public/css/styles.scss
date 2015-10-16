@@ -1,0 +1,48 @@
+// Core variables and mixins
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+// Reset and dependencies
+@import "bootstrap/normalize";
+@import "bootstrap/print";
+// @import "bootstrap/glyphicons";
+
+// Core CSS
+@import "bootstrap/scaffolding";
+// @import "bootstrap/type";
+
+.text-right {
+    text-align: right;
+}
+
+@import "bootstrap/code";
+@import "bootstrap/grid";
+@import "bootstrap/tables";
+@import "bootstrap/forms";
+@import "bootstrap/buttons";
+
+.copy-text-wrapper {
+    position: relative;
+
+    pre, code {
+        cursor: pointer;
+    }
+}
+
+.copy-anchor-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    display: block;
+    padding: 5px 8px;
+    font-size: 12px;
+    color: #767676;
+    background-color: #fff;
+    border: 1px solid #e1e1e8;
+    border-radius: 0 4px 0 4px;
+
+    a {
+        cursor: pointer;
+    }
+}
