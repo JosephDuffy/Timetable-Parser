@@ -24,6 +24,10 @@ module.exports = function(app) {
 		});
 	};
 
+	app.get('/timetable/[u|U]:studentId.ics', function(req, res) {
+		res.redirect(`/timetable/${req.params.studentId}.ics`);
+	});
+
 	app.get('/timetable/:studentId.ics', function(req, res) {
 		var studentId = req.params.studentId;
 		var doAddAlarms = req.query['addAlarms'];
@@ -98,6 +102,10 @@ END:VCALENDAR`;
 
 			timetable.beginParsing();
 		}
+	});
+
+	app.get('/timetable/[u|U]:studentId', function(req, res) {
+		res.redirect(`/timetable/${req.params.studentId}`);
 	});
 
 	app.get('/timetable/:studentId', function(req, res) {

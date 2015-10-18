@@ -24,7 +24,7 @@
 					{{! This is a hack to ensure that on submit a value for "addAlarms" is always sent. This wouldn't be needed if the default was false. }}
 					<input type="hidden" name="addAlarms" value="false">
 					<label>
-						<input type="checkbox" name="addAlarms" id="add-alarms-input" value="true" data-default="{{addAlarmsDefault}}" {{#if addAlarms}}checked{{/if}}> Add Alarm
+						<input type="checkbox" name="addAlarms" id="add-alarms-input" value="true" data-default="{{addAlarmsDefault}}" {{#if addAlarms}}checked{{/if}}> Add Alarms
 					</label>
 					<span class="help-block">Checking this will add alerts (notifications) to the first event in a series of events using the offset specified below.</span>
 				</div>
