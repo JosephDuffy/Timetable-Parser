@@ -5,6 +5,8 @@ var request = require('request');
 var jsdom = require('jsdom');
 var Timetable = require('../model/timetable.js');
 var _ = require('lodash');
+// Cache for 12 hours (in milliseconds)
+var cacheTimeout = 1000 * 60 * 60 * 12;
 
 module.exports = function(app) {
 	app.get('/timetable', function(req, res, next) {
@@ -94,7 +96,7 @@ END:VCALENDAR`;
 			}
 		} else {
 			let timetable = new Timetable(studentId);
-			cache.put(`timetable-${studentId}`, timetable);
+			cache.put(`timetable-${studentId}`, timetable, cacheTimeout);
 
 			timetable.on('finish', function() {
 				sendTimetable(timetable);
@@ -176,7 +178,7 @@ END:VCALENDAR`;
 			}
 		} else {
 			let timetable = new Timetable(studentId);
-			cache.put(`timetable-${studentId}`, timetable);
+			cache.put(`timetable-${studentId}`, timetable, cacheTimeout);
 			timetable.beginParsing();
 
 			continueRequestWithTimetable(res, timetable);
