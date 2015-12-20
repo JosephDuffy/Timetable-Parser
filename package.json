@@ -3,6 +3,10 @@
   "version": "0.1.1",
   "description": "Parse Huddersfield University timetable and export",
   "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JosephDuffy/Timetable-Parser/"
+  },
   "dependencies": {
     "compression": "^1.6.0",
     "dateformat": "^1.0.11",
@@ -23,9 +27,6 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.6.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joseph Duffy",
   "license": "MIT"
