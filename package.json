@@ -1,6 +1,6 @@
 {
   "name": "timetable-parser",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parse Huddersfield University timetable and export",
   "main": "app.js",
   "dependencies": {
