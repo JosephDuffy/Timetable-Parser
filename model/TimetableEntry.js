@@ -48,7 +48,7 @@ TimetableEntry.prototype.iCalRepresentation = function(previousEntryEndDate, doA
 
 	var event = `BEGIN:VEVENT
 UID:${this.calendarId()}
-SUMMARY:${this.moduleName}
+SUMMARY:${this.moduleName} (${this.moduleCode})
 DESCRIPTION:${entryTypeName} - ${this.teacher.replace(/\,/g, '\\,')}
 LOCATION:${this.room}
 DTSTART;TZID=Europe/London:${dateFormat(this.startTime, dateFormatString)}
